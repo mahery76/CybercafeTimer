@@ -1,0 +1,67 @@
+:root{
+    --voary-blue:#027b89 ;
+    --voary-green:#1a993a ;
+    --voary-red:#f33444 ;
+    --voary-grey: rgb(49, 49, 49);
+    --voary-dark: rgb(17, 17, 17);
+    --voary-white: white;
+    --voary-light: rgb(211, 211, 211);
+    
+}
+input[type=text], input[type=number]{
+    padding: 5px;
+    border: 1px solid var(--voary-dark);
+    border-radius: 5px;
+    background-color: var(--voary-grey);
+    width: 5em;
+    color: var(--voary-light);
+}
+.timer__tous{
+    display: flex;
+}
+.timer2__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.time{
+    width: 10em;
+}
+.time_values{
+    display: flex;
+    align-items: center;
+    width: 13em;
+}
+.prix_part{
+    width: 3em;
+}
+.prix{
+ display: flex;
+ justify-content: space-around;
+ margin-left: 1em;
+}
+.values {
+    color: var(--voary-green);
+    font-weight: bold;
+    margin-right: 0.2em;
+}
+.property {
+    color: var(--voary-blue);
+    font-weight: bold;
+}
+i{
+    cursor: pointer;
+    font-size: 1.3em;
+}
+.reset{
+    color: var(--voary-blue);
+}
+.hidden{
+    display: none;
+}
+.play{
+    color: var(--voary-green);
+}
+.buttons{
+    margin-left: 1em;
+}

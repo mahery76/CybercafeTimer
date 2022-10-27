@@ -1,0 +1,54 @@
+:root{
+    --voary-blue:#027b89 ;
+    --voary-green:#105e24 ;
+    --voary-red:#720810 ;
+    --voary-grey: rgb(49, 49, 49);
+    --voary-dark: rgb(17, 17, 17);
+    --voary-white: white;
+    --voary-light: rgb(211, 211, 211);
+
+}
+.wifi {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.wifi__all{
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    color: orange;
+
+}
+.wifi__item{
+    display: flex;
+    width: 95%;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1em;
+}
+
+.wifi__ajouter {
+    margin-top: 2em;
+    padding: 1em 0;
+    color: aliceblue;
+    background: rgba(16, 94, 36, 0.85);
+    width: 22em;
+    border: green;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.wifi__ajouter:hover{
+    background: rgba(16, 94, 36);
+}
+.delete{
+    color: var(--voary-red);
+    margin-left: 1em;
+}
+
+
