@@ -1,4 +1,5 @@
 import Dexie from "dexie";
+
 const defaultComputers = [
   {
     computer_name: "Poste 1",
@@ -13,11 +14,26 @@ const defaultComputers = [
     minutes: 0,
     seconds: 0,
     computer_description: ""
-  }
+  },
+  {
+    computer_name: "Poste 3",
+    hours: 0,
+    minutes: 0,
+    seconds: 0, 
+    computer_description: ""
+  },
+  {
+    computer_name: "Poste 4",
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    computer_description: ""
+  },
 ];
+
 const defaultWifis = [
   {
-    computer_name: "Wifi 1",
+    computer_name: "Wifi",
     hours: 0,
     minutes: 0,
     seconds: 0,

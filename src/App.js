@@ -1,9 +1,8 @@
-import { useState } from "react";
 import "./App.css";
 import Layout from "./components/Layout";
-import WifiPages from "./components/WifiPages";
+import WifiPages from "./pages/WifiPages";
 import { Route, Routes } from "react-router-dom";
-import ComputerPages from "./components/ComputerPages";
+import ComputerPages from "./pages/ComputerPages";
 
 function App() {
   return (
