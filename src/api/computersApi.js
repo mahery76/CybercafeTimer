@@ -4,7 +4,7 @@ export const getAllComputers = async () => {
   return await db.computers.toArray();
 };
 
-export const addComputer = (terminalList, setTerminalList) => {
+export const addComputer = (computerList, setComputerList) => {
   let newComputer = {
     computer_name: "",
     hours: 0,
@@ -15,8 +15,8 @@ export const addComputer = (terminalList, setTerminalList) => {
   db.computers
     .add(newComputer)
     .then(() => {
-      setTerminalList([...terminalList, newComputer]);
-      console.log(terminalList)
+      setComputerList([...computerList, newComputer]);
+      console.log(computerList)
     })
     .catch((error) => {
       alert("Echec d'ajout de poste");
@@ -42,14 +42,14 @@ export const editNameComputer = (computer_name, computers_id) => {
   })
 }
 
-export const deleteComputer = async (computers_id,terminalList, setTerminalList) => {
+export const deleteComputer = async (computers_id,computerList, setComputerList) => {
     const confirmed = window.confirm(`Voulez-vous supprimer le poste ${computers_id}`)
     if(confirmed){
         db.computers
         .delete(computers_id)
         .then(() => {
-            setTerminalList(
-                terminalList.filter((terminal => terminal.computers_id !== computers_id))
+            setComputerList(
+                computerList.filter((computer => computer.computers_id !== computers_id))
             )
         })
     }

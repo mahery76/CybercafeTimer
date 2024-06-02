@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { editNameComputer } from "../api/computersApi";
 import { BsTrash } from "react-icons/bs";
 import { GrPowerReset } from "react-icons/gr";
@@ -6,10 +6,11 @@ import { FaRegCirclePause } from "react-icons/fa6";
 import { FaRegCirclePlay } from "react-icons/fa6";
 import { FaRegEdit } from "react-icons/fa";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
+import bipsong from "../assets/beepb.wav"
 
-function ComputerItem({ terminal, handleDelete, feePerMinute }) {
+function ComputerItem({ computer, handleDelete, feePerMinute }) {
   const [isSelected, setIsSelected] = useState(true);
-  const [computer_name, setComputer_name] = useState(terminal.computer_name);
+  const [computer_name, setComputer_name] = useState(computer.computer_name);
 
   const handleValidate = (computers_id) => {
     setIsSelected(() => false);
@@ -18,9 +19,13 @@ function ComputerItem({ terminal, handleDelete, feePerMinute }) {
 
   const [isRunnig, setIsRunning] = useState(false);
   const [timerId, setTimerId] = useState(null);
-  const [hours, setHours] = useState(terminal.hours);
-  const [minutes, setMinutes] = useState(terminal.minutes);
-  const [seconds, setSeconds] = useState(terminal.seconds);
+  const [hours, setHours] = useState(computer.hours);
+  const [minutes, setMinutes] = useState(computer.minutes);
+  const [seconds, setSeconds] = useState(computer.seconds);
+  const currentComputerFee = feePerMinute * minutes
+  const [computerFee, setComputerFee] = useState(0)
+
+  const audioRef = useRef(null)
 
   useEffect(() => {
     if (isRunnig) {
@@ -42,18 +47,27 @@ function ComputerItem({ terminal, handleDelete, feePerMinute }) {
         });
       }, 1000);
       setTimerId(intervalId);
+
     } else if (!isRunnig && timerId) {
       clearInterval(timerId);
       setTimerId(null);
     }
   }, [isRunnig]);
 
+  useEffect(() => {
+    if(currentComputerFee !== 0 && currentComputerFee >= computerFee) {
+      console.log("audio should be playing")
+      audioRef.current.play()
+    }
+  },[seconds])
+
   const playTimer = () => {
     setIsRunning(() => true);
   };
-
+  
   const pauseTimer = () => {
     setIsRunning(() => false);
+    audioRef.current.pause()
   };
 
   const resetTimer = () => {
@@ -69,16 +83,16 @@ function ComputerItem({ terminal, handleDelete, feePerMinute }) {
       {/* computer name */}
       <div className="flex gap-2 items-center ">
         <div className="w-5/6 cursor-pointer">
-          <div className={isSelected ? "hidden" : "block "}>{computer_name}</div>
+          <div className={isSelected ? "hidden" : "block"}>{computer_name}</div>
           <div className={isSelected ? "block" : "hidden"}>
             <input
-              className="border-[2px] border-grey-100 w-full"
+              className="border-[2px] border-grey-100 w-full text-center"
               type="text"
               value={computer_name}
               onChange={(e) => setComputer_name(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  handleValidate(terminal.computers_id);
+                  handleValidate(computer.computers_id);
                 }
               }}
             />
@@ -94,7 +108,7 @@ function ComputerItem({ terminal, handleDelete, feePerMinute }) {
           </div>
           <div
             className={isSelected ? "block" : "hidden"}
-            onClick={() => handleValidate(terminal.computers_id)}
+            onClick={() => handleValidate(computer.computers_id)}
           >
             <IoCheckmarkDoneSharp />
           </div>
@@ -109,15 +123,18 @@ function ComputerItem({ terminal, handleDelete, feePerMinute }) {
       </div>
 
       {/* computer fee */}
-
       <div>
         <input 
         type="number" 
+        value={computerFee}
+        onChange={(e) => setComputerFee(() => e.target.value)}
         className="border-[2px] border-grey-100 w-full text-center" 
         />
       </div>
-      <div className="flex items-center justify-end">
-        <span>{feePerMinute}</span>
+
+      {/* current computer fee */}
+      <div className="flex items-center justify-end gap-2">
+        <span>{currentComputerFee}</span>
         <span>Ar</span>
       </div>
 
@@ -148,13 +165,18 @@ function ComputerItem({ terminal, handleDelete, feePerMinute }) {
           <GrPowerReset />
         </div>
         <div
-          onClick={() => handleDelete(terminal.computers_id)}
+          onClick={() => handleDelete(computer.computers_id)}
           className="flex justify-center items-center"
         >
           <BsTrash />
         </div>
+        <audio ref={audioRef}>
+          <source src={bipsong} type='audio/mpeg' />
+        </audio>
       </div>
     </div>
   );
 }
+
+
 export default ComputerItem;
