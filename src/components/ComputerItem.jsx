@@ -90,7 +90,14 @@ const ComputerFee = ({ computerFee, setComputerFee, currentComputerFee }) => {
   );
 };
 
-const ComputerControllers = ({isRunning,playTimer,pauseTimer,resetTimer,handleDelete,audioRef}) => {
+const ComputerControllers = ({
+  isRunning,
+  playTimer,
+  pauseTimer,
+  resetTimer,
+  handleDelete,
+  audioRef,
+}) => {
   return (
     <div className="flex justify-center gap-2">
       {/* play */}
@@ -184,7 +191,7 @@ function ComputerItem({ computer, handleDelete, feePerMinute }) {
   }, [isRunning]);
 
   useEffect(() => {
-    if (computerFee !== 0 && currentComputerFee >= computerFee) {
+    if (computerFee > 0 && currentComputerFee >= computerFee) {
       audioRef.current.play();
       setIsTimeOut(() => true);
     }
@@ -235,7 +242,7 @@ function ComputerItem({ computer, handleDelete, feePerMinute }) {
         setComputerFee={setComputerFee}
         currentComputerFee={currentComputerFee}
       />
-      
+
       <ComputerControllers
         isRunning={isRunning}
         playTimer={playTimer}
