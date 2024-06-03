@@ -34,23 +34,18 @@ export const updateComputerTime = (computer_id, hours, minutes, seconds) => {
   })
 }
 
-export const editNameComputer = (computer_name, computer_id) => {
-  console.log(computer_name, computer_id)
+export const editComputerName = (computer_name, computer_id) => {
   db.computers
   .where("computer_id").equals(computer_id)
   .modify({computer_name: computer_name})
-  .then(updated => {
-    if(updated){
-      console.log("updtated successfully")
-    }
-    else{
-      console.log("no matched record")
-    }
-  })
-  .catch(error => {
-     console.error("failed", error)
-  })
 }
+
+export const editComputerFee = (computer_fee, computer_id) => {
+  db.computers
+  .where("computer_id").equals(computer_id)
+  .modify({computer_fee: Number(computer_fee)})
+}
+
 
 export const deleteComputer = async (computer_id,computerList, setComputerList) => {
     const confirmed = window.confirm(`Voulez-vous supprimer le poste ${computer_id}`)

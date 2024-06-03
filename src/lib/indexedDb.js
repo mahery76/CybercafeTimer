@@ -6,6 +6,7 @@ const defaultComputers = [
     hours: 0,
     minutes: 0,
     seconds: 0,
+    computer_fee: 0,
     computer_description: ""
   },
   {
@@ -13,13 +14,15 @@ const defaultComputers = [
     hours: 0,
     minutes: 0,
     seconds: 0,
+    computer_fee: 0,
     computer_description: ""
   },
   {
     computer_name: "Poste 3",
     hours: 0,
     minutes: 0,
-    seconds: 0, 
+    seconds: 0,
+    computer_fee: 0, 
     computer_description: ""
   },
   {
@@ -27,6 +30,7 @@ const defaultComputers = [
     hours: 0,
     minutes: 0,
     seconds: 0,
+    computer_fee: 0,
     computer_description: ""
   },
 ];
@@ -37,13 +41,14 @@ const defaultWifis = [
     hours: 0,
     minutes: 0,
     seconds: 0,
+    wifiFee: 0,
     computer_description: ""
   }
 ];
 export const db = new Dexie("cybercafedb");
 db.version(1).stores({
-  wifis: "++wifi_id, wifi_name, hours, minutes, seconds, wifi_description",
-  computers: "++computer_id, computer_name, hours, minutes, seconds, computer_description",
+  wifis: "++wifi_id, wifi_name, hours, minutes, seconds, wifiFee, wifi_description",
+  computers: "++computer_id, computer_name, hours, minutes, seconds, computer_fee, computer_description",
 });
 db.on("populate", () => {
   db.computers.bulkAdd(defaultComputers);

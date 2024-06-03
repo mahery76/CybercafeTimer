@@ -1,4 +1,4 @@
-[] - add computerFee to each computer in indexedDb
+[] - add computer_fee to each computer in indexedDb
 [] - 
 [] - 
  

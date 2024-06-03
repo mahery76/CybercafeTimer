@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { editNameComputer, updateComputerTime } from "../api/computersApi";
+import {
+  editComputerFee,
+  editComputerName,
+  updateComputerTime,
+} from "../api/computersApi";
 import { BsTrash } from "react-icons/bs";
 import { GrPowerReset } from "react-icons/gr";
 import { FaRegCirclePause } from "react-icons/fa6";
@@ -9,7 +13,7 @@ import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import bipsong from "../assets/beepb.wav";
 
 const ComputerName = ({
-  isSelected,
+  isNameSelected,
   computer_name,
   setComputer_name,
   validateComputerName,
@@ -17,9 +21,12 @@ const ComputerName = ({
 }) => {
   return (
     <div className="flex gap-2 items-center ">
+      {/* computer name input and computer name */}
       <div className="w-5/6 cursor-pointer text-center">
-        <div className={isSelected ? "hidden" : "block"}>{computer_name}</div>
-        <div className={isSelected ? "block" : "hidden"}>
+        <div className={isNameSelected ? "hidden" : "block"}>
+          {computer_name}
+        </div>
+        <div className={isNameSelected ? "block" : "hidden"}>
           <input
             className="border-[2px] border-grey-100 w-full text-center"
             type="text"
@@ -33,16 +40,16 @@ const ComputerName = ({
           />
         </div>
       </div>
-      {/* edit and validate computer name */}
+      {/* edit and validate computer name controllers */}
       <div className="w-1/6 cursor-pointer flex justify-center items-center">
         <div
-          className={`${isSelected ? "hidden" : "block"}`}
+          className={`${isNameSelected ? "hidden" : "block"}`}
           onClick={() => selectComputerName()}
         >
           <FaRegEdit />
         </div>
         <div
-          className={isSelected ? "block" : "hidden"}
+          className={isNameSelected ? "block" : "hidden"}
           onClick={() => validateComputerName()}
         >
           <IoCheckmarkDoneSharp />
@@ -57,7 +64,7 @@ const ComputerTime = ({ hours, minutes, seconds }) => {
     <div className="flex justify-center items-center">
       <div
         className={`
-    ${(seconds > 0 || minutes > 0 || hours > 0) ? "block" : "hidden"}
+    ${seconds > 0 || minutes > 0 || hours > 0 ? "block" : "hidden"}
     flex justify-center items-center
     `}
       >
@@ -69,21 +76,56 @@ const ComputerTime = ({ hours, minutes, seconds }) => {
   );
 };
 
-const ComputerFee = ({ computerFee, setComputerFee, currentComputerFee }) => {
+const ComputerFee = ({
+  isFeeSelected,
+  computer_fee,
+  setComputer_fee,
+  currentcomputer_fee,
+  validateComputerFee,
+  selectComputerFee,
+}) => {
   return (
     <>
-      <div>
-        <input
-          type="number"
-          value={computerFee}
-          onChange={(e) => setComputerFee(() => e.target.value)}
-          className="border-[2px] border-grey-100 w-full text-center"
-        />
+      <div className="flex gap-2 items-center ">
+        {/* computer fee input and computer fee */}
+        <div className="w-5/6 cursor-pointer text-center">
+          <div className={isFeeSelected ? "hidden" : "block"}>
+            {computer_fee}
+          </div>
+          <div className={isFeeSelected ? "block" : "hidden"}>
+            <input
+              className="border-[2px] border-grey-100 w-full text-center"
+              type="number"
+              value={computer_fee}
+              onChange={(e) => setComputer_fee(() => e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  validateComputerFee();
+                }
+              }}
+            />
+          </div>
+        </div>
+        {/* edit and validate computer fee controllers */}
+        <div className="w-1/6 cursor-pointer flex justify-center items-center">
+          <div
+            className={`${isFeeSelected ? "hidden" : "block"}`}
+            onClick={() => selectComputerFee()}
+          >
+            <FaRegEdit />
+          </div>
+          <div
+            className={isFeeSelected ? "block" : "hidden"}
+            onClick={() => validateComputerFee()}
+          >
+            <IoCheckmarkDoneSharp />
+          </div>
+        </div>
       </div>
 
       {/* current computer fee */}
       <div className="flex items-center justify-end gap-2">
-        <span>{currentComputerFee}</span>
+        <span>{currentcomputer_fee}</span>
         <span>Ar</span>
       </div>
     </>
@@ -141,16 +183,16 @@ const ComputerControllers = ({
 };
 
 const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
-  const [isSelected, setIsSelected] = useState(true);
+  const [isNameSelected, setIsNameSelected] = useState(true);
   const [computer_name, setComputer_name] = useState(computer.computer_name);
 
   const validateComputerName = (computer_id) => {
-    setIsSelected(() => false);
-    editNameComputer(computer_name, computer_id);
+    setIsNameSelected(() => false);
+    editComputerName(computer_name, computer_id);
   };
 
   const selectComputerName = () => {
-    setIsSelected(() => true);
+    setIsNameSelected(() => true);
   };
 
   const [isRunning, setIsRunning] = useState(false);
@@ -158,11 +200,20 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   const [hours, setHours] = useState(computer.hours);
   const [minutes, setMinutes] = useState(computer.minutes);
   const [seconds, setSeconds] = useState(computer.seconds);
-  const currentComputerFee = feePerMinute * minutes;
-  const [computerFee, setComputerFee] = useState(0);
+  const [isFeeSelected, setIsFeeSelected] = useState(true);
+  const [computer_fee, setComputer_fee] = useState(computer.computer_fee);
+  const currentcomputer_fee = feePerMinute * minutes;
   const [isTimeOut, setIsTimeOut] = useState(false);
-
   const audioRef = useRef(null);
+
+  const validateComputerFee = (computer_id) => {
+    setIsFeeSelected(() => false);
+    editComputerFee(computer_fee, computer_id);
+  };
+
+  const selectComputerFee = () => {
+    setIsFeeSelected(() => true);
+  };
 
   useEffect(() => {
     if (isRunning) {
@@ -176,7 +227,7 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
               }
               return minutes + 1;
             });
-            
+
             return 0;
           }
           return seconds + 1;
@@ -188,18 +239,17 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
       setTimerId(null);
     }
   }, [isRunning]);
-  
+
   useEffect(() => {
-    //here goes the put request of the time every second
+    //put request of the time every second
     updateComputerTime(computer.computer_id, hours, minutes, seconds);
 
     //beeps when finished
-    if (computerFee > 0 && currentComputerFee >= computerFee) {
+    if (computer_fee > 0 && currentcomputer_fee >= computer_fee) {
       audioRef.current.play();
       setIsTimeOut(() => true);
-    }
-    else{
-      setIsTimeOut(() => false)
+    } else {
+      setIsTimeOut(() => false);
     }
   }, [seconds]);
 
@@ -229,7 +279,7 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
     `}
     >
       <ComputerName
-        isSelected={isSelected}
+        isNameSelected={isNameSelected}
         computer_name={computer_name}
         setComputer_name={setComputer_name}
         validateComputerName={() => validateComputerName(computer.computer_id)}
@@ -244,9 +294,12 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
       />
 
       <ComputerFee
-        computerFee={computerFee}
-        setComputerFee={setComputerFee}
-        currentComputerFee={currentComputerFee}
+        isFeeSelected={isFeeSelected}
+        computer_fee={computer_fee}
+        setComputer_fee={setComputer_fee}
+        currentcomputer_fee={currentcomputer_fee}
+        validateComputerFee={() => validateComputerFee(computer.computer_id)}
+        selectComputerFee={selectComputerFee}
       />
 
       <ComputerControllers
@@ -259,5 +312,5 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
       />
     </div>
   );
-}
+};
 export default ComputerItem;

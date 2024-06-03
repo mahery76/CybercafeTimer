@@ -20,9 +20,8 @@ function ComputerPages() {
   }, []);
 
   return (
-    <div>
-
-      <div>
+    <div className="">
+      <div className="flex">
         <div>Prix à la minute:</div> 
         <div>
           <input 
