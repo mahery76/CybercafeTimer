@@ -2,27 +2,27 @@ import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 function Layout() {
   return (
-    <div className="flex flex-col justify-center items-center bg-neutral-700">
-      <div className="max-w-[40rem]">
-        <div className="flex bg-neutral-950">
+    <div className="bg-neutral-700 h-screen">
+      {/* header */}
+      <div className=" bg-neutral-900 px-5">
+        {/* header content */}
+        <div className="flex max-w-[40rem] m-auto justify-between gap-5 items-center py-8 text-center">
           <NavLink
-            className={({ isActive }) => (isActive ? "bg-red-100" : "")}
+            className={({ isActive }) => (isActive ? "bg-cyan-600 rounded-md py-4 w-3/6 text-white" : "bg-neutral-700 rounded-md py-4 w-3/6 text-white hover:bg-neutral-600")}
             to="/"
           >
-            <div>Postes</div>
+            <div className="rounded-md">Postes</div>
           </NavLink>
           <NavLink
             to="/wifi"
-            className={({ isActive }) => (isActive ? "bg-red-100" : "")}
+            className={({ isActive }) => (isActive ? "bg-cyan-600 rounded-md py-4 w-3/6 text-white" : "bg-neutral-700 rounded-md py-4 w-3/6 text-white hover:bg-neutral-600")}
           >
-            <div>Wifi</div>
+            <div>Wi-fis</div>
           </NavLink>
         </div>
-        <Outlet />
       </div>
+      <Outlet />
     </div>
   );
 }
 export default Layout;
-
-
