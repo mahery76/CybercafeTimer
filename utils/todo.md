@@ -1,4 +1,4 @@
-[] - api in indexedDB
-[] - compte a rebour 
-[] - prix 
+[] - add computerFee to each computer in indexedDb
+[] - 
+[] - 
  

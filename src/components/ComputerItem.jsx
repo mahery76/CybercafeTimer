@@ -17,7 +17,7 @@ const ComputerName = ({
 }) => {
   return (
     <div className="flex gap-2 items-center ">
-      <div className="w-5/6 cursor-pointer">
+      <div className="w-5/6 cursor-pointer text-center">
         <div className={isSelected ? "hidden" : "block"}>{computer_name}</div>
         <div className={isSelected ? "block" : "hidden"}>
           <input
@@ -52,7 +52,7 @@ const ComputerName = ({
   );
 };
 
-const ComputerTime = ({ isRunning, hours, minutes, seconds }) => {
+const ComputerTime = ({ hours, minutes, seconds }) => {
   return (
     <div className="flex justify-center items-center">
       <div
@@ -191,13 +191,15 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   
   useEffect(() => {
     //here goes the put request of the time every second
-    console.log(hours, minutes, seconds);
     updateComputerTime(computer.computer_id, hours, minutes, seconds);
 
     //beeps when finished
     if (computerFee > 0 && currentComputerFee >= computerFee) {
       audioRef.current.play();
       setIsTimeOut(() => true);
+    }
+    else{
+      setIsTimeOut(() => false)
     }
   }, [seconds]);
 

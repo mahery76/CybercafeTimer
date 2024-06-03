@@ -32,14 +32,6 @@ export const updateComputerTime = (computer_id, hours, minutes, seconds) => {
     minutes: minutes,
     seconds: seconds
   })
-  .then(updated => {
-    if(updated){
-      console.log("time updtated succesfully")
-    }
-    else{
-      console.log("time not updated")
-    }
-  })
 }
 
 export const editNameComputer = (computer_name, computer_id) => {
