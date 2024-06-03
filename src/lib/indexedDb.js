@@ -43,7 +43,7 @@ const defaultWifis = [
 export const db = new Dexie("cybercafedb");
 db.version(1).stores({
   wifis: "++wifi_id, wifi_name, hours, minutes, seconds, wifi_description",
-  computers: "++computers_id, computer_name, hours, minutes, seconds, computer_description",
+  computers: "++computer_id, computer_name, hours, minutes, seconds, computer_description",
 });
 db.on("populate", () => {
   db.computers.bulkAdd(defaultComputers);

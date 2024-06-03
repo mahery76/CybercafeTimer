@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { editNameComputer } from "../api/computersApi";
+import { editNameComputer, updateComputerTime } from "../api/computersApi";
 import { BsTrash } from "react-icons/bs";
 import { GrPowerReset } from "react-icons/gr";
 import { FaRegCirclePause } from "react-icons/fa6";
@@ -57,7 +57,7 @@ const ComputerTime = ({ isRunning, hours, minutes, seconds }) => {
     <div className="flex justify-center items-center">
       <div
         className={`
-    ${seconds > 0 ? "block" : "hidden"}
+    ${(seconds > 0 || minutes > 0 || hours > 0) ? "block" : "hidden"}
     flex justify-center items-center
     `}
       >
@@ -140,13 +140,13 @@ const ComputerControllers = ({
   );
 };
 
-function ComputerItem({ computer, handleDelete, feePerMinute }) {
+const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   const [isSelected, setIsSelected] = useState(true);
   const [computer_name, setComputer_name] = useState(computer.computer_name);
 
-  const validateComputerName = (computers_id) => {
+  const validateComputerName = (computer_id) => {
     setIsSelected(() => false);
-    editNameComputer(computer_name, computers_id);
+    editNameComputer(computer_name, computer_id);
   };
 
   const selectComputerName = () => {
@@ -170,14 +170,13 @@ function ComputerItem({ computer, handleDelete, feePerMinute }) {
         setSeconds((seconds) => {
           if (seconds + 1 === 60) {
             setMinutes((minutes) => {
-              //here goes the post request every minute
-
               if (minutes + 1 === 60) {
                 setHours((hours) => hours + 1);
                 return 0;
               }
               return minutes + 1;
             });
+            
             return 0;
           }
           return seconds + 1;
@@ -189,8 +188,13 @@ function ComputerItem({ computer, handleDelete, feePerMinute }) {
       setTimerId(null);
     }
   }, [isRunning]);
-
+  
   useEffect(() => {
+    //here goes the put request of the time every second
+    console.log(hours, minutes, seconds);
+    updateComputerTime(computer.computer_id, hours, minutes, seconds);
+
+    //beeps when finished
     if (computerFee > 0 && currentComputerFee >= computerFee) {
       audioRef.current.play();
       setIsTimeOut(() => true);
@@ -226,7 +230,7 @@ function ComputerItem({ computer, handleDelete, feePerMinute }) {
         isSelected={isSelected}
         computer_name={computer_name}
         setComputer_name={setComputer_name}
-        validateComputerName={() => validateComputerName(computer.computers_id)}
+        validateComputerName={() => validateComputerName(computer.computer_id)}
         selectComputerName={selectComputerName}
       />
 
@@ -248,7 +252,7 @@ function ComputerItem({ computer, handleDelete, feePerMinute }) {
         playTimer={playTimer}
         pauseTimer={pauseTimer}
         resetTimer={resetTimer}
-        handleDelete={() => handleDelete(computer.computers_id)}
+        handleDelete={() => handleDelete(computer.computer_id)}
         audioRef={audioRef}
       />
     </div>

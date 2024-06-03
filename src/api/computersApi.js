@@ -24,10 +24,28 @@ export const addComputer = (computerList, setComputerList) => {
     });
 };
 
-export const editNameComputer = (computer_name, computers_id) => {
-  console.log(computer_name, computers_id)
+export const updateComputerTime = (computer_id, hours, minutes, seconds) => {
   db.computers
-  .where("computers_id").equals(computers_id)
+  .where("computer_id").equals(computer_id)
+  .modify({
+    hours: hours, 
+    minutes: minutes,
+    seconds: seconds
+  })
+  .then(updated => {
+    if(updated){
+      console.log("time updtated succesfully")
+    }
+    else{
+      console.log("time not updated")
+    }
+  })
+}
+
+export const editNameComputer = (computer_name, computer_id) => {
+  console.log(computer_name, computer_id)
+  db.computers
+  .where("computer_id").equals(computer_id)
   .modify({computer_name: computer_name})
   .then(updated => {
     if(updated){
@@ -42,16 +60,17 @@ export const editNameComputer = (computer_name, computers_id) => {
   })
 }
 
-export const deleteComputer = async (computers_id,computerList, setComputerList) => {
-    const confirmed = window.confirm(`Voulez-vous supprimer le poste ${computers_id}`)
+export const deleteComputer = async (computer_id,computerList, setComputerList) => {
+    const confirmed = window.confirm(`Voulez-vous supprimer le poste ${computer_id}`)
     if(confirmed){
         db.computers
-        .delete(computers_id)
+        .delete(computer_id)
         .then(() => {
             setComputerList(
-                computerList.filter((computer => computer.computers_id !== computers_id))
+                computerList.filter((computer => computer.computer_id !== computer_id))
             )
         })
     }
 };
+
 

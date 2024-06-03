@@ -11,8 +11,8 @@ function ComputerPages() {
     addComputer(computerList, setComputerList);
   };
 
-  const handleDelete = (computers_id) => {
-    deleteComputer(computers_id,computerList, setComputerList)
+  const handleDelete = (computer_id) => {
+    deleteComputer(computer_id,computerList, setComputerList)
   }
 
   useEffect(() => {
@@ -41,7 +41,7 @@ z
       <div className="mx-4">
         {computerList.map((computer) => (
           <ComputerItem
-          key={computer.computers_id}
+          key={computer.computer_id}
           computer={computer}
           handleDelete={handleDelete}
           feePerMinute={feePerMinute}
