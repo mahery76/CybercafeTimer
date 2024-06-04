@@ -3,7 +3,6 @@ import { getAllComputers } from "../api/computersApi";
 import { addComputer } from "../api/computersApi";
 import { deleteComputer } from "../api/computersApi";
 import ComputerItem from "../components/ComputerItem";
-import { FaVoteYea } from "react-icons/fa";
 function ComputerPages() {
   const [feePerMinute, setFeePerMinute] = useState(30);
   const [computerList, setComputerList] = useState([]);
@@ -39,7 +38,7 @@ function ComputerPages() {
             </div>
           </div>
         </div>
-        <div onClick={handleAdd} className="flex w-3/6 text-white justify-center bg-neutral-900 border-2 border-green-600 px-2 py-4 rounded-md cursor-pointer hover:bg-green-950">
+        <div onClick={handleAdd} className="flex w-3/6 text-white justify-center border-2 border-green-600 px-2 py-4 rounded-md cursor-pointer bg-green-950 hover:bg-green-900">
           Ajouter poste
         </div>
       </div>

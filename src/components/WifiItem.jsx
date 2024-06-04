@@ -1,9 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  editComputerFee,
-  editComputerName,
-  updateComputerTime,
-} from "../api/computersApi";
+import { updateWifiTime, editWifiName, editWifiFee } from "../api/wifisApi";
 import { BsTrash } from "react-icons/bs";
 import { GrPowerReset } from "react-icons/gr";
 import { FaRegCirclePause } from "react-icons/fa6";
@@ -13,20 +9,20 @@ import { FaLockOpen } from "react-icons/fa";
 import bipsong from "../assets/beepb.wav";
 import { startTimer, stopTimer } from "../lib/timeManager";
 
-const ComputerName = ({
+const WifiName = ({
   isNameSelected,
-  computer_name,
-  setComputer_name,
-  validateComputerName,
-  selectComputerName,
+  wifi_name,
+  setWifi_name,
+  validateWifiName,
+  selectWifiName,
 }) => {
   return (
     <div className="flex gap-2 items-center ">
-      {/* computer name input and computer name */}
+      {/* wifi name input and wifi name */}
       <div className="w-5/6 cursor-pointer text-center">
         <div className={isNameSelected ? "hidden" : "block"}>
           <input
-            value={computer_name}
+            value={wifi_name}
             className="rounded-md w-full text-white text-center bg-neutral-900"
           />
         </div>
@@ -34,27 +30,27 @@ const ComputerName = ({
           <input
             className="rounded-md w-full text-white text-center border-[1px] border-white bg-neutral-950"
             type="text"
-            value={computer_name}
-            onChange={(e) => setComputer_name(e.target.value)}
+            value={wifi_name}
+            onChange={(e) => setWifi_name(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                validateComputerName();
+                validateWifiName();
               }
             }}
           />
         </div>
       </div>
-      {/* edit and validate computer name controllers */}
+      {/* edit and validate wifi name controllers */}
       <div className="w-1/6 cursor-pointer flex justify-center items-center">
         <div
           className={`${isNameSelected ? "hidden" : "block"}`}
-          onClick={() => selectComputerName()}
+          onClick={() => selectWifiName()}
         >
           <FaLock />
         </div>
         <div
           className={isNameSelected ? "block" : "hidden"}
-          onClick={() => validateComputerName()}
+          onClick={() => validateWifiName()}
         >
           <FaLockOpen />
         </div>
@@ -63,14 +59,14 @@ const ComputerName = ({
   );
 };
 
-const ComputerTime = ({ hours, minutes, seconds }) => {
+const WifiTime = ({ hours, minutes, seconds }) => {
   return (
     <div className="flex justify-center items-center">
       <div
         className={`
-    ${seconds > 0 || minutes > 0 || hours > 0 ? "block" : "hidden"}
-    flex justify-center items-center
-    `}
+      ${seconds > 0 || minutes > 0 || hours > 0 ? "block" : "hidden"}
+      flex justify-center items-center
+      `}
       >
         {hours.toString().padStart(2, "0")}:
         {minutes.toString().padStart(2, "0")}:
@@ -80,22 +76,22 @@ const ComputerTime = ({ hours, minutes, seconds }) => {
   );
 };
 
-const ComputerFee = ({
+const WifiFee = ({
   isFeeSelected,
-  computer_fee,
-  setComputer_fee,
-  currentcomputer_fee,
-  validateComputerFee,
-  selectComputerFee,
+  wifi_fee,
+  setWifi_fee,
+  currentwifi_fee,
+  validateWifiFee,
+  selectWifiFee,
 }) => {
   return (
     <>
-      {/* computer fee input and computer fee */}
+      {/* wifi fee input and wifi fee */}
       <div className="flex gap-2 items-center ">
         <div className="w-5/6 cursor-pointer text-center">
           <div className={isFeeSelected ? "hidden" : "block"}>
             <input
-              value={computer_fee}
+              value={wifi_fee}
               className="rounded-md w-full text-white text-center bg-neutral-900"
             />
           </div>
@@ -103,43 +99,43 @@ const ComputerFee = ({
             <input
               className="rounded-md w-full text-white text-center border-[1px] border-white bg-neutral-950"
               type="number"
-              value={computer_fee}
-              onChange={(e) => setComputer_fee(() => e.target.value)}
+              value={wifi_fee}
+              onChange={(e) => setWifi_fee(() => e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  validateComputerFee();
+                  validateWifiFee();
                 }
               }}
             />
           </div>
         </div>
-        {/* edit and validate computer fee controllers */}
+        {/* edit and validate wifi fee controllers */}
         <div className="w-1/6 cursor-pointer flex justify-center items-center">
           <div
             className={`${isFeeSelected ? "hidden" : "block"}`}
-            onClick={() => selectComputerFee()}
+            onClick={() => selectWifiFee()}
           >
             <FaLock />
           </div>
           <div
             className={isFeeSelected ? "block" : "hidden"}
-            onClick={() => validateComputerFee()}
+            onClick={() => validateWifiFee()}
           >
             <FaLockOpen />
           </div>
         </div>
       </div>
 
-      {/* current computer fee */}
+      {/* current wifi fee */}
       <div className="flex items-center justify-end gap-2">
-        <span>{currentcomputer_fee}</span>
+        <span>{currentwifi_fee}</span>
         <span>Ar</span>
       </div>
     </>
   );
 };
 
-const ComputerControllers = ({
+const WifiControllers = ({
   isRunning,
   playTimer,
   pauseTimer,
@@ -152,8 +148,8 @@ const ComputerControllers = ({
       {/* play */}
       <div
         className={`${isRunning ? "hidden" : "flex"}
-      justify-center items-center text-cyan-600 cursor-pointer
-    `}
+        justify-center items-center text-cyan-600 cursor-pointer
+      `}
         onClick={() => playTimer()}
       >
         <FaRegCirclePlay />
@@ -162,8 +158,8 @@ const ComputerControllers = ({
       {/* pause */}
       <div
         className={`${!isRunning ? "hidden" : "flex"}
-      justify-center items-center text-orange-600 cursor-pointer
-    `}
+        justify-center items-center text-orange-600 cursor-pointer
+      `}
         onClick={() => pauseTimer()}
       >
         <FaRegCirclePause />
@@ -189,34 +185,32 @@ const ComputerControllers = ({
   );
 };
 
-const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
+function WifiItem({ wifi, handleDelete, feePerMinute }) {
   const [isNameSelected, setIsNameSelected] = useState(true);
-  const [computer_name, setComputer_name] = useState(computer.computer_name);
+  const [wifi_name, setWifi_name] = useState(wifi.wifi_name);
   const [isRunning, setIsRunning] = useState(false);
-  const [hours, setHours] = useState(computer.hours);
-  const [minutes, setMinutes] = useState(computer.minutes);
-  const [seconds, setSeconds] = useState(computer.seconds);
+  const [hours, setHours] = useState(wifi.hours);
+  const [minutes, setMinutes] = useState(wifi.minutes);
+  const [seconds, setSeconds] = useState(wifi.seconds);
   const [isFeeSelected, setIsFeeSelected] = useState(true);
-  const [computer_fee, setComputer_fee] = useState(computer.computer_fee);
-  const currentcomputer_fee = feePerMinute * minutes;
+  const [wifi_fee, setWifi_fee] = useState(wifi.wifi_fee);
+  const currentwifi_fee = feePerMinute * minutes;
   const [isTimeOut, setIsTimeOut] = useState(false);
   const audioRef = useRef(null);
 
-  const validateComputerName = (computer_id) => {
+  const validateWifiName = (wifi_id) => {
     setIsNameSelected(() => false);
-    editComputerName(computer_name, computer_id);
+    editWifiName(wifi_name, wifi_id);
   };
-
-  const selectComputerName = () => {
+  const selectWifiName = () => {
     setIsNameSelected(() => true);
   };
-
-  const validateComputerFee = (computer_id) => {
+  const validateWifiFee = (wifi_id) => {
     setIsFeeSelected(() => false);
-    editComputerFee(computer_fee, computer_id);
+    editWifiFee(wifi_fee, wifi_id);
   };
 
-  const selectComputerFee = () => {
+  const selectWifiFee = () => {
     setIsFeeSelected(() => true);
   };
 
@@ -228,7 +222,6 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
     setIsRunning(() => false);
     audioRef.current.pause();
   };
-
   const resetTimer = () => {
     setIsRunning(false);
     setSeconds(0);
@@ -236,7 +229,6 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
     setHours(0);
     setIsTimeOut(() => false);
   };
-
   useEffect(() => {
     if (isRunning) {
       startTimer(() => {
@@ -254,19 +246,18 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
           }
           return seconds + 1;
         });
-      }, 1000)  
-    } 
-    else if (!isRunning){
-      stopTimer()
+      }, 1000);
+    } else if (!isRunning) {
+      stopTimer();
     }
   }, [isRunning]);
 
   useEffect(() => {
     //put request of the time every second
-    updateComputerTime(computer.computer_id, hours, minutes, seconds);
+    updateWifiTime(wifi.wifi_id, hours, minutes, seconds);
 
     //beeps when finished
-    if (computer_fee > 0 && currentcomputer_fee >= computer_fee) {
+    if (wifi_fee > 0 && currentwifi_fee >= wifi_fee) {
       audioRef.current.play();
       setIsTimeOut(() => true);
     } else {
@@ -277,43 +268,44 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   return (
     <div
       className={`
-    ${isTimeOut ? "border-2 border-red-300" : ""}
-    grid grid-cols-4 sm:grid-cols-5 gap-4 mt-4 text-white bg-neutral-900 p-4 rounded-md
-    `}
+  ${isTimeOut ? "border-2 border-red-300" : ""}
+  grid grid-cols-4 sm:grid-cols-5 gap-4 mt-4 text-white bg-neutral-900 p-4 rounded-md
+  `}
     >
-      <ComputerName
+      <WifiName
         isNameSelected={isNameSelected}
-        computer_name={computer_name}
-        setComputer_name={setComputer_name}
-        validateComputerName={() => validateComputerName(computer.computer_id)}
-        selectComputerName={selectComputerName}
+        wifi_name={wifi_name}
+        setWifi_name={setWifi_name}
+        validateWifiName={() => validateWifiName(wifi.wifi_id)}
+        selectWifiName={selectWifiName}
       />
 
-      <ComputerTime
+      <WifiTime
         isRunning={isRunning}
         hours={hours}
         minutes={minutes}
         seconds={seconds}
       />
 
-      <ComputerFee
+      <WifiFee
         isFeeSelected={isFeeSelected}
-        computer_fee={computer_fee}
-        setComputer_fee={setComputer_fee}
-        currentcomputer_fee={currentcomputer_fee}
-        validateComputerFee={() => validateComputerFee(computer.computer_id)}
-        selectComputerFee={selectComputerFee}
+        wifi_fee={wifi_fee}
+        setWifi_fee={setWifi_fee}
+        currentwifi_fee={currentwifi_fee}
+        validateWifiFee={() => validateWifiFee(wifi.wifi_id)}
+        selectWifiFee={selectWifiFee}
       />
 
-      <ComputerControllers
+      <WifiControllers
         isRunning={isRunning}
         playTimer={playTimer}
         pauseTimer={pauseTimer}
         resetTimer={resetTimer}
-        handleDelete={() => handleDelete(computer.computer_id)}
+        handleDelete={() => handleDelete(wifi.wifi_id)}
         audioRef={audioRef}
       />
     </div>
   );
-};
-export default ComputerItem;
+}
+
+export default WifiItem;

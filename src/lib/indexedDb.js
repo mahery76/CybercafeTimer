@@ -37,17 +37,17 @@ const defaultComputers = [
 
 const defaultWifis = [
   {
-    computer_name: "Wifi",
+    wifi_name: "Wifi",
     hours: 0,
     minutes: 0,
     seconds: 0,
-    wifiFee: 0,
-    computer_description: ""
+    wifi_fee: 0,
+    wifi_description: ""
   }
 ];
 export const db = new Dexie("cybercafedb");
 db.version(1).stores({
-  wifis: "++wifi_id, wifi_name, hours, minutes, seconds, wifiFee, wifi_description",
+  wifis: "++wifi_id, wifi_name, hours, minutes, seconds, wifi_fee, wifi_description",
   computers: "++computer_id, computer_name, hours, minutes, seconds, computer_fee, computer_description",
 });
 db.on("populate", () => {

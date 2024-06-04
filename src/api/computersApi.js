@@ -4,12 +4,14 @@ export const getAllComputers = async () => {
   return await db.computers.toArray();
 };
 
+
 export const addComputer = (computerList, setComputerList) => {
   let newComputer = {
     computer_name: "",
     hours: 0,
     minutes: 0,
     seconds: 0,
+    computer_fee: 0,
     computer_description: "",
   };
   db.computers
@@ -48,7 +50,7 @@ export const editComputerFee = (computer_fee, computer_id) => {
 
 
 export const deleteComputer = async (computer_id,computerList, setComputerList) => {
-    const confirmed = window.confirm(`Voulez-vous supprimer le poste ${computer_id}`)
+    const confirmed = window.confirm(`Voulez-vous supprimer ce poste`)
     if(confirmed){
         db.computers
         .delete(computer_id)
