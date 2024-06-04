@@ -2,7 +2,7 @@ import Dexie from "dexie";
 
 const defaultComputers = [
   {
-    computer_name: "Poste 1",
+    computer_name: "P1",
     hours: 0,
     minutes: 0,
     seconds: 0,
@@ -10,7 +10,7 @@ const defaultComputers = [
     computer_description: ""
   },
   {
-    computer_name: "Poste 2",
+    computer_name: "P2",
     hours: 0,
     minutes: 0,
     seconds: 0,
@@ -18,7 +18,7 @@ const defaultComputers = [
     computer_description: ""
   },
   {
-    computer_name: "Poste 3",
+    computer_name: "P3",
     hours: 0,
     minutes: 0,
     seconds: 0,
@@ -26,7 +26,7 @@ const defaultComputers = [
     computer_description: ""
   },
   {
-    computer_name: "Poste 4",
+    computer_name: "P4",
     hours: 0,
     minutes: 0,
     seconds: 0,

@@ -8,9 +8,10 @@ import { BsTrash } from "react-icons/bs";
 import { GrPowerReset } from "react-icons/gr";
 import { FaRegCirclePause } from "react-icons/fa6";
 import { FaRegCirclePlay } from "react-icons/fa6";
-import { FaRegEdit } from "react-icons/fa";
-import { IoCheckmarkDoneSharp } from "react-icons/io5";
+import { FaLock } from "react-icons/fa";
+import { FaLockOpen } from "react-icons/fa";
 import bipsong from "../assets/beepb.wav";
+import { startTimer } from "../lib/timeManager";
 
 const ComputerName = ({
   isNameSelected,
@@ -24,11 +25,14 @@ const ComputerName = ({
       {/* computer name input and computer name */}
       <div className="w-5/6 cursor-pointer text-center">
         <div className={isNameSelected ? "hidden" : "block"}>
-          {computer_name}
+          <input
+            value={computer_name}
+            className="rounded-md w-full text-white text-center bg-neutral-900"
+          />
         </div>
         <div className={isNameSelected ? "block" : "hidden"}>
           <input
-            className="border-[2px] border-grey-100 w-full text-center"
+            className="rounded-md w-full text-white text-center border-[1px] border-white bg-neutral-950"
             type="text"
             value={computer_name}
             onChange={(e) => setComputer_name(e.target.value)}
@@ -46,13 +50,13 @@ const ComputerName = ({
           className={`${isNameSelected ? "hidden" : "block"}`}
           onClick={() => selectComputerName()}
         >
-          <FaRegEdit />
+          <FaLock />
         </div>
         <div
           className={isNameSelected ? "block" : "hidden"}
           onClick={() => validateComputerName()}
         >
-          <IoCheckmarkDoneSharp />
+          <FaLockOpen />
         </div>
       </div>
     </div>
@@ -86,15 +90,18 @@ const ComputerFee = ({
 }) => {
   return (
     <>
+      {/* computer fee input and computer fee */}
       <div className="flex gap-2 items-center ">
-        {/* computer fee input and computer fee */}
         <div className="w-5/6 cursor-pointer text-center">
           <div className={isFeeSelected ? "hidden" : "block"}>
-            {computer_fee}
+            <input
+              value={computer_fee}
+              className="rounded-md w-full text-white text-center bg-neutral-900"
+            />
           </div>
           <div className={isFeeSelected ? "block" : "hidden"}>
             <input
-              className="border-[2px] border-grey-100 w-full text-center"
+              className="rounded-md w-full text-white text-center border-[1px] border-white bg-neutral-950"
               type="number"
               value={computer_fee}
               onChange={(e) => setComputer_fee(() => e.target.value)}
@@ -112,13 +119,13 @@ const ComputerFee = ({
             className={`${isFeeSelected ? "hidden" : "block"}`}
             onClick={() => selectComputerFee()}
           >
-            <FaRegEdit />
+            <FaLock />
           </div>
           <div
             className={isFeeSelected ? "block" : "hidden"}
             onClick={() => validateComputerFee()}
           >
-            <IoCheckmarkDoneSharp />
+            <FaLockOpen />
           </div>
         </div>
       </div>
@@ -141,11 +148,11 @@ const ComputerControllers = ({
   audioRef,
 }) => {
   return (
-    <div className="flex justify-center gap-2">
+    <div className="flex justify-between sm:justify-center gap-2 ">
       {/* play */}
       <div
         className={`${isRunning ? "hidden" : "flex"}
-      justify-center items-center
+      justify-center items-center text-cyan-600
     `}
         onClick={() => playTimer()}
       >
@@ -155,7 +162,7 @@ const ComputerControllers = ({
       {/* pause */}
       <div
         className={`${!isRunning ? "hidden" : "flex"}
-      justify-center items-center
+      justify-center items-center text-orange-600
     `}
         onClick={() => pauseTimer()}
       >
@@ -164,14 +171,14 @@ const ComputerControllers = ({
 
       {/* reset */}
       <div
-        className="flex justify-center items-center"
+        className="flex justify-center items-center text-green-600"
         onClick={() => resetTimer()}
       >
         <GrPowerReset />
       </div>
       <div
         onClick={() => handleDelete()}
-        className="flex justify-center items-center"
+        className="flex justify-center items-center text-red-600"
       >
         <BsTrash />
       </div>
@@ -185,16 +192,6 @@ const ComputerControllers = ({
 const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   const [isNameSelected, setIsNameSelected] = useState(true);
   const [computer_name, setComputer_name] = useState(computer.computer_name);
-
-  const validateComputerName = (computer_id) => {
-    setIsNameSelected(() => false);
-    editComputerName(computer_name, computer_id);
-  };
-
-  const selectComputerName = () => {
-    setIsNameSelected(() => true);
-  };
-
   const [isRunning, setIsRunning] = useState(false);
   const [timerId, setTimerId] = useState(null);
   const [hours, setHours] = useState(computer.hours);
@@ -206,6 +203,15 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   const [isTimeOut, setIsTimeOut] = useState(false);
   const audioRef = useRef(null);
 
+  const validateComputerName = (computer_id) => {
+    setIsNameSelected(() => false);
+    editComputerName(computer_name, computer_id);
+  };
+
+  const selectComputerName = () => {
+    setIsNameSelected(() => true);
+  };
+
   const validateComputerFee = (computer_id) => {
     setIsFeeSelected(() => false);
     editComputerFee(computer_fee, computer_id);
@@ -214,44 +220,6 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   const selectComputerFee = () => {
     setIsFeeSelected(() => true);
   };
-
-  useEffect(() => {
-    if (isRunning) {
-      const intervalId = setInterval(() => {
-        setSeconds((seconds) => {
-          if (seconds + 1 === 60) {
-            setMinutes((minutes) => {
-              if (minutes + 1 === 60) {
-                setHours((hours) => hours + 1);
-                return 0;
-              }
-              return minutes + 1;
-            });
-
-            return 0;
-          }
-          return seconds + 1;
-        });
-      }, 1000);
-      setTimerId(intervalId);
-    } else if (!isRunning && timerId) {
-      clearInterval(timerId);
-      setTimerId(null);
-    }
-  }, [isRunning]);
-
-  useEffect(() => {
-    //put request of the time every second
-    updateComputerTime(computer.computer_id, hours, minutes, seconds);
-
-    //beeps when finished
-    if (computer_fee > 0 && currentcomputer_fee >= computer_fee) {
-      audioRef.current.play();
-      setIsTimeOut(() => true);
-    } else {
-      setIsTimeOut(() => false);
-    }
-  }, [seconds]);
 
   const playTimer = () => {
     setIsRunning(() => true);
@@ -271,11 +239,67 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
     setIsTimeOut(() => false);
   };
 
+  useEffect(() => {
+    if (isRunning) {
+      // const intervalId = setInterval(() => {
+      //   setSeconds((seconds) => {
+      //     if (seconds + 1 === 60) {
+      //       setMinutes((minutes) => {
+      //         if (minutes + 1 === 60) {
+      //           setHours((hours) => hours + 1);
+      //           return 0;
+      //         }
+      //         return minutes + 1;
+      //       });
+
+      //       return 0;
+      //     }
+      //     return seconds + 1;
+      //   });
+      // }, 1000);
+      // setTimerId(intervalId);
+
+      startTimer(() => {
+        setSeconds((seconds) => {
+          if (seconds + 1 === 60) {
+            setMinutes((minutes) => {
+              if (minutes + 1 === 60) {
+                setHours((hours) => hours + 1);
+                return 0;
+              }
+              return minutes + 1;
+            });
+
+            return 0;
+          }
+          return seconds + 1;
+        });
+      }, 1000)  
+    } 
+    // else if (!isRunning && timerId) {
+    //   clearInterval(timerId);
+    //   setTimerId(null);
+    // }
+  }, [isRunning]);
+
+  useEffect(() => {
+    //put request of the time every second
+    updateComputerTime(computer.computer_id, hours, minutes, seconds);
+
+    //beeps when finished
+    if (computer_fee > 0 && currentcomputer_fee >= computer_fee) {
+      audioRef.current.play();
+      setIsTimeOut(() => true);
+    } else {
+      setIsTimeOut(() => false);
+    }
+  }, [seconds]);
+
   return (
     <div
       className={`
     ${isTimeOut ? "border-2 border-red-300" : ""}
-    grid grid-cols-5 gap-4 mt-4 p-2
+    grid grid-cols-4 sm:grid-cols-5 gap-4 mt-4 text-white bg-neutral-900 p-4 rounded-md
     `}
     >
       <ComputerName
