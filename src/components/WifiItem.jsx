@@ -7,7 +7,6 @@ import { FaRegCirclePlay } from "react-icons/fa6";
 import { FaLock } from "react-icons/fa";
 import { FaLockOpen } from "react-icons/fa";
 import bipsong from "../assets/beepb.wav";
-import { startTimer, stopTimer } from "../lib/timeManager";
 
 const WifiName = ({
   isNameSelected,
@@ -23,6 +22,7 @@ const WifiName = ({
         <div className={isNameSelected ? "hidden" : "block"}>
           <input
             value={wifi_name}
+            readOnly
             className="rounded-md w-full text-white text-center bg-neutral-900"
           />
         </div>
@@ -91,6 +91,7 @@ const WifiFee = ({
         <div className="w-5/6 cursor-pointer text-center">
           <div className={isFeeSelected ? "hidden" : "block"}>
             <input
+              readOnly
               value={wifi_fee}
               className="rounded-md w-full text-white text-center bg-neutral-900"
             />
@@ -189,6 +190,7 @@ function WifiItem({ wifi, handleDelete, feePerMinute }) {
   const [isNameSelected, setIsNameSelected] = useState(true);
   const [wifi_name, setWifi_name] = useState(wifi.wifi_name);
   const [isRunning, setIsRunning] = useState(false);
+  const [timerId, setTimerId] = useState(null);
   const [hours, setHours] = useState(wifi.hours);
   const [minutes, setMinutes] = useState(wifi.minutes);
   const [seconds, setSeconds] = useState(wifi.seconds);
@@ -197,6 +199,7 @@ function WifiItem({ wifi, handleDelete, feePerMinute }) {
   const currentwifi_fee = feePerMinute * minutes;
   const [isTimeOut, setIsTimeOut] = useState(false);
   const audioRef = useRef(null);
+  const [audio, setAudio] = useState(null);
 
   const validateWifiName = (wifi_id) => {
     setIsNameSelected(() => false);
@@ -220,7 +223,7 @@ function WifiItem({ wifi, handleDelete, feePerMinute }) {
 
   const pauseTimer = () => {
     setIsRunning(() => false);
-    audioRef.current.pause();
+    audio.pause();
   };
   const resetTimer = () => {
     setIsRunning(false);
@@ -230,8 +233,16 @@ function WifiItem({ wifi, handleDelete, feePerMinute }) {
     setIsTimeOut(() => false);
   };
   useEffect(() => {
+    const _audio = new Audio(bipsong);
+    _audio.load();
+    _audio.addEventListener("canplaythrough", () => {
+      console.log("loaded audio");
+      setAudio(_audio);
+    });
+  }, []);
+  useEffect(() => {
     if (isRunning) {
-      startTimer(() => {
+      const intervalId = setInterval(() => {
         setSeconds((seconds) => {
           if (seconds + 1 === 60) {
             setMinutes((minutes) => {
@@ -247,8 +258,10 @@ function WifiItem({ wifi, handleDelete, feePerMinute }) {
           return seconds + 1;
         });
       }, 1000);
-    } else if (!isRunning) {
-      stopTimer();
+      setTimerId(intervalId);
+    } else if (!isRunning && timerId) {
+      clearInterval(timerId);
+      setTimerId(null);
     }
   }, [isRunning]);
 
@@ -258,7 +271,7 @@ function WifiItem({ wifi, handleDelete, feePerMinute }) {
 
     //beeps when finished
     if (wifi_fee > 0 && currentwifi_fee >= wifi_fee) {
-      audioRef.current.play();
+      audio.play();
       setIsTimeOut(() => true);
     } else {
       setIsTimeOut(() => false);

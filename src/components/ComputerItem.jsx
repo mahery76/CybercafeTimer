@@ -11,7 +11,6 @@ import { FaRegCirclePlay } from "react-icons/fa6";
 import { FaLock } from "react-icons/fa";
 import { FaLockOpen } from "react-icons/fa";
 import bipsong from "../assets/beepb.wav";
-import { startTimer, stopTimer } from "../lib/timeManager";
 
 const ComputerName = ({
   isNameSelected,
@@ -27,6 +26,7 @@ const ComputerName = ({
         <div className={isNameSelected ? "hidden" : "block"}>
           <input
             value={computer_name}
+            readOnly
             className="rounded-md w-full text-white text-center bg-neutral-900"
           />
         </div>
@@ -95,6 +95,7 @@ const ComputerFee = ({
         <div className="w-5/6 cursor-pointer text-center">
           <div className={isFeeSelected ? "hidden" : "block"}>
             <input
+             readOnly
               value={computer_fee}
               className="rounded-md w-full text-white text-center bg-neutral-900"
             />
@@ -193,6 +194,7 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
   const [isNameSelected, setIsNameSelected] = useState(true);
   const [computer_name, setComputer_name] = useState(computer.computer_name);
   const [isRunning, setIsRunning] = useState(false);
+  const [timerId, setTimerId] = useState(null);
   const [hours, setHours] = useState(computer.hours);
   const [minutes, setMinutes] = useState(computer.minutes);
   const [seconds, setSeconds] = useState(computer.seconds);
@@ -239,7 +241,7 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
 
   useEffect(() => {
     if (isRunning) {
-      startTimer(() => {
+      const intervalId = setInterval(() => {
         setSeconds((seconds) => {
           if (seconds + 1 === 60) {
             setMinutes((minutes) => {
@@ -254,10 +256,11 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
           }
           return seconds + 1;
         });
-      }, 1000)  
-    } 
-    else if (!isRunning){
-      stopTimer()
+      }, 1000);
+      setTimerId(intervalId);
+    } else if (!isRunning && timerId) {
+      clearInterval(timerId);
+      setTimerId(null);
     }
   }, [isRunning]);
 
@@ -316,4 +319,5 @@ const ComputerItem = ({ computer, handleDelete, feePerMinute }) => {
     </div>
   );
 };
+
 export default ComputerItem;
